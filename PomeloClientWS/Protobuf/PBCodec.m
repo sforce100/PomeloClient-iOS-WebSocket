@@ -11,57 +11,9 @@
 @implementation PBCodec
 
 /**
- * codec UInt32
- */
-+ (NSMutableData *)encodeUInt32:(uint32_t)n {
-  return [PBCodec encodeUInt64:n];
-//  unsigned char result[5] = {0}, count = 0;
-//  do {
-//    result[count++] = (unsigned char) ((n & 0x7F) | 0x80);
-//    n >>= 7;
-//  } while (n != 0);
-//  result[count - 1] &= 0x7F;
-//  return [NSMutableData dataWithBytes:result length:count];
-//  //log("encodeUInt32: 0x%@", dst);
-}
-
-+ (uint32_t)decodeUInt32:(NSData *)data {
-  return [PBCodec decodeUInt64:data];
-//  uint32_t n = 0;
-//  unsigned char *ptr = (unsigned char *) data.bytes;
-//  uint32_t i = 0;
-//  for (; i < data.length; i++) {
-//    n |= ((ptr[i] & 0x7F) << (i * 7));
-//  }
-//  //log("decodeUInt32: %u", n);
-//  return n;
-}
-
-/**
- * codec Int32
- */
-+ (NSMutableData *)encodeSInt32:(int32_t)n {
-  return [PBCodec encodeSInt64:n];
-//  n = n < 0 ? (abs(n) * 2 - 1) : n * 2;
-//  return [PBCodec encodeUInt32:n];
-//  //log("encodeSInt32: %@", dst);
-}
-
-+ (int32_t)decodeSInt32:(NSData *)data {
-  return [PBCodec decodeSInt64:data];
-//  // even number means source number is >= 0
-//  // odd number means source number is < 0
-//  uint32_t n = [PBCodec decodeUInt32:data];
-//  bool isOddNumber = (bool) (n & 0x1);
-//  n >>= 1;
-//  //log("decodeSInt32: %d", ( (isOddNumber) ? (-1 * (n + 1)) : (n) ));
-//  return ((isOddNumber) ? (-1 * (n + 1)) : (n));
-}
-
-/**
  * codec UInt64
  */
-+ (NSMutableData *)encodeUInt64:(uint64_t)n {
++ (NSMutableData *)encodeUInt32:(uint64_t)n {
   unsigned char result[10] = {0}, count = 0;
 
   do {
@@ -93,7 +45,7 @@
  */
 }
 
-+ (uint64_t)decodeUInt64:(NSData *)data {
++ (uint64_t)decodeUInt32:(NSData *)data {
   uint64_t x = 0; //, n = 0;
   unsigned char *ptr = (unsigned char *) data.bytes;
   uint64_t i = 0;
@@ -133,16 +85,16 @@
 /**
  * codec Int64
  */
-+ (NSMutableData *)encodeSInt64:(int64_t)n {
++ (NSMutableData *)encodeSInt32:(int64_t)n {
   n = n < 0 ? ((llabs(n) * 2) - 1) : n * 2;
-  return [PBCodec encodeUInt64:n];
+  return [PBCodec encodeUInt32:n];
   //log("encodeSInt64: %@", dst);
 }
 
-+ (int64_t)decodeSInt64:(NSData *)data {
++ (int64_t)decodeSInt32:(NSData *)data {
   // even number means source number is >= 0
   // odd number means source number is < 0
-  uint64_t n = [PBCodec decodeUInt64:data];
+  uint64_t n = [PBCodec decodeUInt32:data];
   bool isOddNumber = (bool) (n & 0x1);
   n >>= 1;
   //log("decodeSInt64: %d", ( (isOddNumber) ? (-1 * (n + 1)) : (n) ));
