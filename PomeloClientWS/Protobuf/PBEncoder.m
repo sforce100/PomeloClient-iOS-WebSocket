@@ -79,8 +79,8 @@ private)
   //Check msg
   if ([PBEncoder checkMsg:msg withProtos:protos]) {
     //Set the length of the buffer 2 times bigger to prevent overflow
-    NSUInteger length = JSON_stringify(msg).length;
-
+    //NSUInteger length = JSON_stringify(msg).length;
+    NSUInteger length = [PBCodec byteLength:JSON_stringify(msg)];
     //Init buffer and offset
     NSMutableData *buffer = [NSMutableData dataWithLength:length];
     NSUInteger offset = 0;
